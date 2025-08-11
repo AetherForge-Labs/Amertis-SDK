@@ -1,0 +1,42 @@
+{
+  "name": "Amertis-SDK",
+  "version": "1.0.0",
+  "description": "Amertis SDK for blockchain interactions",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src",
+    "start": "pnpm tsup --watch",
+    "prepublishOnly": "pnpm build",
+    "query": "tsx script/tryFinder.ts",
+    "amount": "tsx script/tryAmount.ts"
+  },
+  "keywords": [
+    "blockchain",
+    "sdk",
+    "amertis",
+    "viem"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.2",
+    "viem": "^2.33.3"
+  },
+  "peerDependencies": {
+    "viem": "^2.33.3"
+  }
+}
