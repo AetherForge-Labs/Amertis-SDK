@@ -5,7 +5,7 @@ import { erc20ABI } from "../../abi";
 export interface ApproveTransactionParams {
   tokenAddress: string;
   amount: bigint;
-  userAddress: string;
+  userAddress: `0x${string}`;
 }
 
 export interface UnsignedTransaction {

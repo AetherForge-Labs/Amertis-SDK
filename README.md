@@ -482,13 +482,12 @@ This project is licensed under the ISC License - see the [LICENSE](LICENSE) file
 
 - **Documentation**: [docs.amertis.com](https://docs.amertis.com)
 - **Discord**: [discord.gg/amertis](https://discord.gg/amertis)
-- **Email**: support@amertis.com
+- **Email**: support@amertis.exchange
 - **GitHub Issues**: [Report a bug](https://github.com/your-org/amertis-sdk/issues)
 
 ## 🔗 Links
 
-- **Website**: [amertis.com](https://amertis.com)
-- **API Docs**: [api.amertis.com](https://api.amertis.com)
+- **Website**: [amertis.com](https://amertis.exchange)
 - **GitHub**: [github.com/your-org/amertis-sdk](https://github.com/your-org/amertis-sdk)
 
 ## 🙏 Acknowledgments

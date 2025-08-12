@@ -9,7 +9,7 @@ export interface Token {
 */
 export interface SwapData {
   amounts: bigint[];
-  adapters: string[];
+  adapters: `0x${string}`[];
   path: [];
   gasEstimate: bigint;
 }
@@ -31,10 +31,20 @@ export type FindBestPrice = (
 >;
 
 /*
-    multicall data structure
+    Swap response structure
 */
-export interface MultiCallRes {
+export interface SwapRes {
   result?: SwapData;
+  value?: SwapData;
+  status: string;
+}
+
+/*
+    Normal call response structure
+*/
+export interface ResultRes {
+  result?: bigint;
+  value?: bigint;
   status: string;
 }
 
@@ -52,7 +62,12 @@ export type GetAmountOut = (
       quote: bigint;
       amountOut: bigint;
       formattedAmountOut: string;
-      priceData: SwapData;
+      swapData: SwapData;
     }
   | undefined
 >;
+
+/*
+    swap transaction build structure
+*/
+export interface swapParams {}

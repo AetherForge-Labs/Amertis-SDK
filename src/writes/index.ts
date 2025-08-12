@@ -8,8 +8,6 @@ export * from "./executions";
 export {
   createApproveTransaction,
   createPermitTransaction,
-  createSwapTransaction,
-  createExactInputSwapTransaction,
   type UnsignedTransaction,
   type ApproveTransactionParams,
   type SwapTransactionParams,

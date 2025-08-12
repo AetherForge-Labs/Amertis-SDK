@@ -2,8 +2,9 @@ import { routerCA, client } from "../config";
 import { multicall } from "viem/actions";
 import { formatUnits, parseUnits } from "viem";
 import type { Abi } from "viem";
-import abi from "../abi";
-import type { MultiCallRes, GetAmountOut, SwapData, Token } from "../types";
+import { routerABI } from "../abi";
+import type { SwapRes, GetAmountOut, Token } from "../types";
+import { noSimilarToken, replaceIfZeroAddress } from "../helpers";
 
 /**
  * @type Token
@@ -24,47 +25,49 @@ export const getAmountOut: GetAmountOut = async (
   amountIn
 ) => {
   try {
+    noSimilarToken(tokenIn, tokenOut);
+
     const calls = [
       {
-        address: routerCA as `0x${string}`,
-        abi: abi as Abi,
+        address: routerCA,
+        abi: routerABI as Abi,
         functionName: "findBestPath",
         args: [
           parseUnits("1", tokenIn.decimal),
-          tokenIn.address as `0x${string}`,
-          tokenOut.address as `0x${string}`,
+          replaceIfZeroAddress(tokenIn.address),
+          replaceIfZeroAddress(tokenOut.address),
           4, // this is the max number of hops we use. The router expects 1 < X <= 5.
         ],
       },
       {
-        address: routerCA as `0x${string}`,
-        abi: abi as Abi,
+        address: routerCA,
+        abi: routerABI,
         functionName: "findBestPath",
         args: [
           amountIn,
-          tokenIn.address as `0x${string}`,
-          tokenOut.address as `0x${string}`,
+          replaceIfZeroAddress(tokenIn.address),
+          replaceIfZeroAddress(tokenOut.address),
           4, // this is the max number of hops we use. The router expects 1 < X <= 5.
         ],
       },
     ];
 
-    const [priceData, amountData] = (await multicall(client, {
+    const [swapData, amountData] = (await multicall(client, {
       contracts: calls,
-    })) as [MultiCallRes, MultiCallRes];
+    })) as [SwapRes, SwapRes];
 
     // Type guard to check if results exist and have data
     if (
-      !priceData.result ||
+      !swapData.result ||
       !amountData.result ||
-      !priceData.result.path.length ||
-      !priceData.result.amounts.length ||
+      !swapData.result.path.length ||
+      !swapData.result.amounts.length ||
       !amountData.result.amounts.length
     ) {
       throw new Error("No route found between the specified tokens");
     }
 
-    const quote = priceData.result.amounts[priceData.result.amounts.length - 1];
+    const quote = swapData.result.amounts[swapData.result.amounts.length - 1];
     const amountOut =
       amountData.result.amounts[amountData.result.amounts.length - 1];
 
@@ -72,10 +75,10 @@ export const getAmountOut: GetAmountOut = async (
       symbol: tokenOut.symbol,
       decimals: tokenOut.decimal,
       quote: quote,
-      formattedQuote: formatUnits(quote, tokenIn.decimal),
+      formattedQuote: formatUnits(quote, tokenOut.decimal),
       amountOut: amountOut,
       formattedAmountOut: formatUnits(amountOut, tokenOut.decimal),
-      priceData: priceData.result,
+      swapData: swapData.result,
     };
   } catch (error) {
     console.log("Error from findBestPrice", error);

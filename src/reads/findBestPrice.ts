@@ -1,9 +1,9 @@
-import { routerCA, client } from "../config";
+import { routerCA, client, wrappedNative } from "../config";
 import { readContract } from "viem/actions";
 import { formatUnits, parseUnits } from "viem";
-import type { Abi } from "viem";
-import abi from "../abi";
+import { routerABI } from "../abi";
 import type { FindBestPrice, SwapData, Token } from "../types";
+import { noSimilarToken, replaceIfZeroAddress } from "../helpers";
 
 // Remove local client creation - now using shared client
 
@@ -21,14 +21,16 @@ import type { FindBestPrice, SwapData, Token } from "../types";
  */
 export const findBestPrice: FindBestPrice = async (tokenIn, tokenOut) => {
   try {
+    noSimilarToken(tokenIn, tokenOut);
+
     const res = await readContract(client, {
       address: routerCA as `0x${string}`,
-      abi: abi as Abi,
+      abi: routerABI,
       functionName: "findBestPath",
       args: [
         parseUnits("1", tokenIn.decimal),
-        tokenIn.address as `0x${string}`,
-        tokenOut.address as `0x${string}`,
+        replaceIfZeroAddress(tokenIn.address),
+        replaceIfZeroAddress(tokenOut.address),
         4, // this is the max number of hops we use. The router expects 1 < X <= 5.
       ],
     });

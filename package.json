@@ -19,8 +19,9 @@
     "build": "tsup src",
     "start": "pnpm tsup --watch",
     "prepublishOnly": "pnpm build",
-    "query": "tsx script/tryFinder.ts",
-    "amount": "tsx script/tryAmount.ts"
+    "find": "tsx script/tryFinder.ts",
+    "amount": "tsx script/tryAmount.ts",
+    "checks": "tsx script/tryChecks.ts"
   },
   "keywords": [
     "blockchain",
