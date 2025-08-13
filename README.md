@@ -27,15 +27,16 @@ import { findBestPrice, getAmountOut, swap } from "Amertis-SDK";
 // Get best price quote
 const quote = await findBestPrice(tokenIn, tokenOut);
 
-// Calculate exact output amount
-const amountOut = await getAmountOut(tokenIn, tokenOut, parseEther("100"));
+// Calculate expected output amount for a given input amount
+const amountOut = await getAmountOut(tokenIn, tokenOut, parseUnits("100", tokenIn.decimal);
 
-// Create swap transaction
+// Create an UNSIGNED swap transaction data
 const swapTx = await swap({
   tokenIn,
   tokenOut,
-  amountIn: parseEther("100"),
+  amountIn: parseUnits("100", tokenIn.decimals),
   userAddress: "0x...",
+  // slippage, it defaults to 0.1% (10 bps) if not specified.
 });
 ```
 
@@ -49,15 +50,15 @@ Find the best swap route and price between two tokens.
 
 ```typescript
 const tokenIn: Token = {
-  address: "0xA0b86a33E6441b4c", // USDC
+  address: "0x...USDC", // Token to swap from
   decimal: 6,
   symbol: "USDC",
 };
 
 const tokenOut: Token = {
-  address: "0x6B175474E89094C44", // DAI
+  address: "0x...WMON", // Token to swap to
   decimal: 18,
-  symbol: "DAI",
+  symbol: "WMON",
 };
 
 const quote = await findBestPrice(tokenIn, tokenOut);
@@ -70,10 +71,10 @@ if (quote) {
 
 #### `getAmountOut(tokenIn: Token, tokenOut: Token, amountIn: bigint)`
 
-Calculate the exact output amount for a given input amount.
+Calculate the expected output amount for a given input amount.
 
 ```typescript
-const amountOut = await getAmountOut(tokenIn, tokenOut, parseEther("100"));
+const amountOut = await getAmountOut(tokenIn, tokenOut, parseUnits("100", tokenIn.decimal);
 
 if (amountOut) {
   console.log(`Input: 100 ${tokenIn.symbol}`);
@@ -92,9 +93,9 @@ Create an unsigned swap transaction.
 const swapTx = await swap({
   tokenIn,
   tokenOut,
-  amountIn: parseEther("100"),
+  amountIn: parseUnits("100", tokenIn.decimal),
   userAddress: "0x1234...",
-  slippageTolerance: 50, // 0.5%
+  slippageTolerance: 10, // 0.1%
 });
 
 // swapTx contains:
@@ -104,6 +105,8 @@ const swapTx = await swap({
 //   value: 0n,
 //   from: '0x1234...'
 // }
+
+//  You can then SIGN and submit the swap transaction using any of your preferred method
 ```
 
 ## 📋 Type Definitions
@@ -136,6 +139,8 @@ interface UnsignedTransaction {
 ### Function Types
 
 ```typescript
+// READ types
+
 type FindBestPrice = (
   tokenIn: Token,
   tokenOut: Token
@@ -164,6 +169,28 @@ type GetAmountOut = (
     }
   | undefined
 >;
+
+// WRITE types and Intefaces
+
+interface SwapTransactionParams {
+  tokenIn: Token;
+  tokenOut: Token;
+  amountIn: bigint;
+  userAddress: string;
+  slippageTolerance?: number; // in basis points (e.g., 10 = 0.1%)
+}
+
+interface UnsignedTransaction {
+  to: string;
+  data: string;
+  value: bigint;
+  from: string;
+}
+
+type const swap = async (
+  params: SwapTransactionParams
+): Promise<UnsignedTransaction | undefined>
+
 ```
 
 ## ⚠️ Important Notes

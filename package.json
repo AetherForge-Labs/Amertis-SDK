@@ -1,7 +1,7 @@
 {
-  "name": "Amertis-SDK",
-  "version": "1.0.0",
-  "description": "Amertis SDK for blockchain interactions",
+  "name": "amertis-sdk",
+  "version": "1.0.1",
+  "description": "Amertis SDK for easy assess to monad's finest on-chain liquidity network.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -41,8 +41,7 @@
   "type": "module",
   "devDependencies": {
     "tsup": "^8.5.0",
-    "typescript": "^5.9.2",
-    "viem": "^2.33.3"
+    "typescript": "^5.9.2"
   },
   "peerDependencies": {
     "viem": "^2.33.3"
