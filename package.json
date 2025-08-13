@@ -21,7 +21,14 @@
     "prepublishOnly": "pnpm build",
     "find": "tsx script/tryFinder.ts",
     "amount": "tsx script/tryAmount.ts",
-    "checks": "tsx script/tryChecks.ts"
+    "swap": "tsx script/trySwap.ts"
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/index.d.ts"
+      ]
+    }
   },
   "keywords": [
     "blockchain",
@@ -29,7 +36,7 @@
     "amertis",
     "viem"
   ],
-  "author": "",
+  "author": "x.com/defilova1",
   "license": "ISC",
   "type": "module",
   "devDependencies": {

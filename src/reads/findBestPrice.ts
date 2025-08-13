@@ -45,6 +45,6 @@ export const findBestPrice: FindBestPrice = async (tokenIn, tokenOut) => {
       formattedQuote: formatUnits(quote, tokenOut.decimal),
     };
   } catch (error) {
-    console.log("Error from findBestPrice", error);
+    console.error("Error from findBestPrice", error);
   }
 };

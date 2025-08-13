@@ -64,11 +64,12 @@ export const _swapWithNative = async (
 
 // Handle checks for balance, allowance and price quote
 export const checks = async (
+  amountIn: bigint,
   tokenIn: Token,
   tokenOut: Token,
   userAddress: string
 ): Promise<
-  | { priceData: SwapRes; balanceData: ResultRes; allowanceData: ResultRes }
+  | { swapData: SwapRes; balanceData: ResultRes; allowanceData: ResultRes }
   | undefined
 > => {
   try {
@@ -78,7 +79,7 @@ export const checks = async (
         abi: routerABI,
         functionName: "findBestPath",
         args: [
-          parseUnits("1", tokenIn.decimal),
+          amountIn,
           tokenIn.address as `0x${string}`,
           replaceIfZeroAddress(tokenOut.address),
           4, // this is the max number of hops we use. The router expects 1 < X <= 5.
@@ -98,40 +99,41 @@ export const checks = async (
       },
     ];
 
-    const [priceData, balanceData, allowanceData] = (await multicall(client, {
+    const [swapData, balanceData, allowanceData] = (await multicall(client, {
       contracts: calls,
     })) as [SwapRes, ResultRes, ResultRes];
 
     return {
-      priceData,
+      swapData,
       balanceData,
       allowanceData,
     };
   } catch (error) {
-    console.log("error from checks", error);
+    console.error("error from checks", error);
   }
 };
 
 // Check for Native balance and price quote
-export const NativeChecks = async (
+export const checksNative = async (
+  amountIn: bigint,
   tokenIn: Token,
   tokenOut: Token,
   userAddress: string
-): Promise<{ priceData: SwapRes; balanceData: ResultRes } | undefined> => {
+): Promise<{ swapData: SwapRes; balanceData: ResultRes } | undefined> => {
   try {
     const priceCall = {
       address: routerCA,
       abi: routerABI,
       functionName: "findBestPath",
       args: [
-        parseUnits("1", tokenIn.decimal),
+        amountIn,
         replaceIfZeroAddress(tokenIn.address),
         tokenOut.address as `0x${string}`,
         4, // this is the max number of hops we use. The router expects 1 < X <= 5.
       ],
     };
 
-    const [priceData, balanceData] = (await Promise.allSettled([
+    const [swapData, balanceData] = (await Promise.allSettled([
       readContract(client, priceCall),
       client.getBalance({
         address: userAddress as `0x${string}`,
@@ -139,10 +141,60 @@ export const NativeChecks = async (
     ])) as [SwapRes, ResultRes];
 
     return {
-      priceData,
+      swapData,
       balanceData,
     };
   } catch (error) {
-    console.log("error from checks", error);
+    console.error("error from checks", error);
   }
+};
+
+/* 
+    serving the encoded function data
+*/
+export const returnFunctionData = (
+  functionName: "swapNoSplitFromNative" | "swapNoSplitToNative" | "swapNoSplit",
+  amountIn: bigint,
+  minAmountOut: bigint,
+  swapData: SwapRes,
+  userAddress: `0x${string}`,
+  value?: bigint
+) => {
+  const fee = BigInt(30);
+  const path = swapData?.result?.path ?? swapData.value?.path;
+  const adapters = swapData?.result?.adapters ?? swapData.value?.adapters;
+
+  if (!path || !adapters) throw new Error("Path or Adapter unavailable");
+
+  console.log({
+    swapData: swapData.result ?? swapData.value,
+    minAmountOut,
+  });
+
+  return {
+    to: routerCA,
+    data: encodeFunctionData({
+      abi: routerABI,
+      functionName,
+      args: [[amountIn, minAmountOut, path, adapters], userAddress, fee],
+    }),
+    value: value ?? 0n,
+    from: userAddress,
+  };
+};
+
+/*
+  calcuating minimum amount out from slippage
+*/
+export const calcMinAmountOut = (
+  swapData: SwapRes,
+  slippageTolerance: number
+): bigint => {
+  const amounts = swapData?.result?.amounts ?? swapData.value?.amounts;
+
+  if (!amounts) return 0n;
+
+  const amountOut = amounts[amounts.length - 1];
+  const slippageBps = BigInt(slippageTolerance);
+  return (amountOut * (10000n - slippageBps)) / 10000n;
 };

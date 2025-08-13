@@ -81,6 +81,6 @@ export const getAmountOut: GetAmountOut = async (
       swapData: swapData.result,
     };
   } catch (error) {
-    console.log("Error from findBestPrice", error);
+    console.error("Error from findBestPrice", error);
   }
 };

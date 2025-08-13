@@ -1,5 +1,5 @@
 // Export transaction builders (unsigned transactions)
-export * from "./transactions";
+export * from "./unsigned";
 
 // Export execution helpers (for users who want to execute through your service)
 export * from "./executions";
@@ -11,7 +11,7 @@ export {
   type UnsignedTransaction,
   type ApproveTransactionParams,
   type SwapTransactionParams,
-} from "./transactions";
+} from "./unsigned";
 
 export {
   executeTransaction,

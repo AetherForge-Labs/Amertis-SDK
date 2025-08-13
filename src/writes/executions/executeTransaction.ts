@@ -1,6 +1,6 @@
 import { client } from "../../config";
 import { sendTransaction, waitForTransactionReceipt } from "viem/actions";
-import type { UnsignedTransaction } from "../transactions";
+import type { UnsignedTransaction } from "../unsigned";
 import { privateKeyToAccount } from "viem/accounts";
 
 export interface ExecuteTransactionParams {
