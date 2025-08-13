@@ -168,7 +168,7 @@ type GetAmountOut = (
 
 ## ⚠️ Important Notes
 
-### Native Token (ETH/MONAD)
+### Native Token (MON)
 
 - **Use `"0x0000000000000000000000000000000000000000"` (zero address) for native token**
 - When swapping **from native token**: Set `tokenIn.address = "0x0000..."`
@@ -176,7 +176,7 @@ type GetAmountOut = (
 
 ### Transaction Flow
 
-1. **Get Quote**: Use `findBestPrice()` or `getAmountOut()` to get pricing
+1. **Get Quote**: Use `findBestPrice()` to get quote price only or `getAmountOut()` to get quotePrice, expected Output Amount and SwapData
 2. **Create Transaction**: Use `swap()` to create unsigned transaction
 3. **User Signs**: User signs transaction with their wallet
 4. **Submit**: User submits signed transaction to network
@@ -210,7 +210,7 @@ ISC License
 
 ## 🆘 Support
 
-- **GitHub Issues**: [Report a bug](https://github.com/your-org/amertis-sdk/issues)
+- **GitHub Issues**: [Report a bug](https://github.com/AetherForge-Labs/Amertis-SDK/issues)
 - **Author**: [@defilova1](https://x.com/defilova1)
 
 ---
