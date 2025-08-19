@@ -1,14 +1,14 @@
 {
   "name": "amertis-sdk",
-  "version": "1.0.1",
+  "version": "1.0.4",
   "description": "Amertis SDK for easy assess to monad's finest on-chain liquidity network.",
   "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
+      "import": "./dist/index.js",
       "require": "./dist/index.js"
     }
   },

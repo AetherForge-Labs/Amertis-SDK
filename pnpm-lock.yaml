@@ -4,16 +4,13 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-overrides:
-  Amertis-SDK: link:../../../Library/pnpm/global/5/node_modules/Amertis-SDK
-
 importers:
 
   .:
     dependencies:
-      Amertis-SDK:
-        specifier: link:../../../Library/pnpm/global/5/node_modules/Amertis-SDK
-        version: link:../../../Library/pnpm/global/5/node_modules/Amertis-SDK
+      viem:
+        specifier: ^2.33.3
+        version: 2.33.3(typescript@5.9.2)
     devDependencies:
       tsup:
         specifier: ^8.5.0
@@ -21,9 +18,6 @@ importers:
       typescript:
         specifier: ^5.9.2
         version: 5.9.2
-      viem:
-        specifier: ^2.33.3
-        version: 2.33.3(typescript@5.9.2)
 
 packages:
 

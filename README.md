@@ -12,17 +12,17 @@ A TypeScript/JavaScript SDK for interacting with Amertis' on-chain aggregator Ro
 ## 📦 Installation
 
 ```bash
-npm install Amertis-SDK
+pnpm add amertis-sdk
 # or
-yarn add Amertis-SDK
+yarn add amertis-sdk
 # or
-pnpm add Amertis-SDK
+npm install amertis-sdk
 ```
 
 ## 🔧 Quick Start
 
 ```typescript
-import { findBestPrice, getAmountOut, swap } from "Amertis-SDK";
+import { findBestPrice, getAmountOut, swap } from "amertis-sdk";
 
 // Get best price quote
 const quote = await findBestPrice(tokenIn, tokenOut);
@@ -187,10 +187,9 @@ interface UnsignedTransaction {
   from: string;
 }
 
-type const swap = async (
+type swap = (
   params: SwapTransactionParams
-): Promise<UnsignedTransaction | undefined>
-
+) => Promise<UnsignedTransaction | undefined>;
 ```
 
 ## ⚠️ Important Notes
