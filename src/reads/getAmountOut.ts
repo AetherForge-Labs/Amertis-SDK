@@ -64,7 +64,7 @@ export const getAmountOut: GetAmountOut = async (
       !swapData.result.amounts.length ||
       !amountData.result.amounts.length
     ) {
-      throw new Error("No route found between the specified tokens");
+      return undefined;
     }
 
     const quote = swapData.result.amounts[swapData.result.amounts.length - 1];

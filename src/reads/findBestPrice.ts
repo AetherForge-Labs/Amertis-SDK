@@ -1,4 +1,4 @@
-import { routerCA, client, wrappedNative } from "../config";
+import { routerCA, client } from "../config";
 import { readContract } from "viem/actions";
 import { formatUnits, parseUnits } from "viem";
 import { routerABI } from "../abi";
